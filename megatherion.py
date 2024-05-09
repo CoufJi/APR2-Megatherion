@@ -6,7 +6,6 @@ from typing import Dict, Iterable, Iterator, Tuple, Union, Any, List, Callable
 from enum import Enum
 from collections.abc import MutableSequence
 
-"""This is a test"""
 
 class Type(Enum):
     Float = 0
