@@ -6,7 +6,7 @@ from typing import Dict, Iterable, Iterator, Tuple, Union, Any, List, Callable
 from enum import Enum
 from collections.abc import MutableSequence
 
-"""This is a test"""
+# Done by me: permute
 
 class Type(Enum):
     Float = 0
@@ -114,7 +114,7 @@ class Column(MutableSequence):# implement MutableSequence (some method are mixed
         """
         del self._data[index]
 
-    def permute(self, indices: List[int]) -> 'Column':
+    def permute(self, indices: List[int]) -> 'Column':  # FIXME: Nefunguje pro více hodnot jak 2 v column
         """
         Return new column which items are defined by list of indices (to original column).
         (eg. `Column(["a", "b", "c"]).permute([0,0,2])`
@@ -123,7 +123,13 @@ class Column(MutableSequence):# implement MutableSequence (some method are mixed
         :return: new column
         """
         assert len(indices) == len(self)
-        ...
+        new_column = []
+        # Podle indexů v indices pozměň pořadí v self.data
+        for i in range(len(indices)): 
+            for x in range(len(self._data)): 
+                if x == indices[i]:
+                    new_column.append(self._data[x])
+        return Column(new_column, dtype=Type.String)  # FIXME: dtype=Type.Float nefunguje
 
     def copy(self) -> 'Column':
         """
@@ -171,7 +177,7 @@ class DataFrame:
         :param index: index of row
         :return: tuple of items in row
         """
-        ...
+        return ()
 
     def __iter__(self) -> Iterator[Tuple[Union[str, float]]]:
         """
@@ -328,7 +334,8 @@ if __name__ == "__main__":
     df = DataFrame(dict(
         a=Column([None, 3.1415], Type.Float),
         b=Column(["a", 2], Type.String),
-        c=Column(range(2), Type.Float)
+        c=Column(range(2), Type.Float),
+        #d=Column(range(2), Type.Float).permute([0, 1]) 
         ))
     df.setvalue("a", 1, 42)
     print(df)
@@ -340,3 +347,4 @@ for line in df:
     print(line)
 
 ###
+
