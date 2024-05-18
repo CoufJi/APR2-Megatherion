@@ -7,6 +7,7 @@ from enum import Enum
 from collections.abc import MutableSequence
 
 # Done by me: permute
+# test
 
 class Type(Enum):
     Float = 0
