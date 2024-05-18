@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Dict, Iterable, Iterator, Tuple, Union, Any, List, Callable
 from enum import Enum
 from collections.abc import MutableSequence
+import csv
 
 # Done by me: permute
 
@@ -299,14 +300,14 @@ class Reader(ABC):
     @abstractmethod
     def read(self) -> DataFrame:
         raise NotImplemented("Abstract method")
-
+# Jedná se o abstrakní třídu, tedy nemá cenu vytvářet její instanci
 
 class JSONReader(Reader):
     """
-    Factory class for creation of dataframe by CSV file. CSV file must contain
-    header line with names of columns.
-    The type of columns should be inferred from types of their values (columns which
-    contains only value has to be floats columns otherwise string columns),
+    Factory class for creation of dataframe by JSON file. JSON file must contain
+    one object with attributes which array values represents columns.
+    The type of columns are inferred from types of their values (columns which
+    contains only value is floats columns otherwise string columns),
     """
     def read(self) -> DataFrame:
         with open(self.path, "rt") as f:
@@ -321,14 +322,17 @@ class JSONReader(Reader):
 
 class CSVReader(Reader):
     """
-    Factory class for creation of dataframe by JSON file. JSON file must contain
-    one object with attributes which array values represents columns.
-    The type of columns are inferred from types of their values (columns which
-    contains only value is floats columns otherwise string columns),
+    Factory class for creation of dataframe by CSV file. CSV file must contain
+    header line with names of columns.
+    The type of columns should be inferred from types of their values (columns which
+    contains only value has to be floats columns otherwise string columns),
     """
     def read(self) -> 'DataFrame':
-        ...
-
+        with open(self.path, "r") as file:
+            CSVfile = csv.reader(file)
+            
+            for line in CSVfile:
+                print(''.join(line))     
 
 if __name__ == "__main__":
     df = DataFrame(dict(
@@ -342,8 +346,12 @@ if __name__ == "__main__":
 
     df = DataFrame.read_json("data.json")
     print(df)
+    df2 = DataFrame.read_csv("data.csv")
 
-for line in df:
+#for line in df:
+#    print(line)
+
+for line in df2:
     print(line)
 
 ###
