@@ -327,12 +327,25 @@ class CSVReader(Reader):
     The type of columns should be inferred from types of their values (columns which
     contains only value has to be floats columns otherwise string columns),
     """
-    def read(self) -> 'DataFrame':
+
+    def read(self) -> 'DataFrame':  # FIXME: Asi by měl brát null/None jako float, nejsem si jist, zatím to bere jako Type.String
         with open(self.path, "r") as file:
-            CSVfile = csv.reader(file)
-            
+            CSVfile = csv.reader(file, delimiter=",")     
+            columns = {}
+            column_names = []
             for line in CSVfile:
-                print(''.join(line))     
+                for i in range(len(line)):
+                    if len(column_names) != len(line):  # Získání názvů jednotlivých sloupečků
+                        column_names.append(line[i])
+                line[i].pop(0)
+                print(line[0])
+                columns[column_names[0]] = Column(line[0], dtype=Type.String)
+                columns[column_names[1]] = Column(line[1], dtype=Type.String)  
+                columns[column_names[2]] = Column(line[2], dtype=Type.String)  
+        return DataFrame(columns)
+
+
+    # prvni hodnota = prvni sloupecek, druha = druhy, treti = treti.....
 
 if __name__ == "__main__":
     df = DataFrame(dict(
